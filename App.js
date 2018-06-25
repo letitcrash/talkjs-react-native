@@ -9,9 +9,8 @@ import {
 } from 'react-native';
 
 const isAndroid = Platform.OS === 'android'
-const userName = 'android'
 
-export default class WebViewTest extends Component {
+export default class WebViewTalkJs extends Component {
 
   constructor(props) {
     super(props);
