@@ -23,21 +23,21 @@ class HomeScreen extends React.Component {
          id: "1",
          name: "Liuka",
          email: "liuka@example.com",
-         photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/master/assets/user1.jpg",
-         welcomeMessage: "Hello"
+         photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/screens-example/assets/user1.jpg",
+         welcomeMessage: "Bonjour"
        },
        {
          id: "2",
          name: "Silberstein",
          email: "silberstein@example.com",
-         photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/master/assets/user2.jpg",
-         welcomeMessage: "Hello"
+         photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/screens-example/assets/user2.jpg",
+         welcomeMessage: "Hej"
        },
        {
          id: "3",
          name: "Alexandra",
          email: "alex@example.com",
-         photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/master/assets/user3.jpg",
+         photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/screens-example/assets/user3.jpg",
          welcomeMessage: "Hello"
        }
        ]
