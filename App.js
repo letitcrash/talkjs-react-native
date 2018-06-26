@@ -21,14 +21,23 @@ class HomeScreen extends React.Component {
        users: [
        {
          id: "1",
-         name: "Alex",
-         email: "alex@example.com",
+         name: "Liuka",
+         email: "liuka@example.com",
+         photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/master/assets/user1.jpg",
          welcomeMessage: "Hello"
        },
        {
          id: "2",
-         name: "Nidecker",
+         name: "Silberstein",
+         email: "silberstein@example.com",
+         photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/master/assets/user2.jpg",
+         welcomeMessage: "Hello"
+       },
+       {
+         id: "3",
+         name: "Alexandra",
          email: "alex@example.com",
+         photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/master/assets/user3.jpg",
          welcomeMessage: "Hello"
        }
        ]
@@ -88,6 +97,7 @@ class ChatScreen extends React.Component {
             id: "${user.id}",
             name: "${user.name}",
             email: "${user.email}",
+            photoUrl: "${user.photoUrl}",
             welcomeMessage: "${user.welcomeMessage}"
           });
 
