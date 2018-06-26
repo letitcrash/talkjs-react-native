@@ -5,105 +5,116 @@ import {
   Text,
   TouchableHighlight,
   WebView,
-  Platform
+  Platform,
+  Button
 } from 'react-native';
+
+import { createStackNavigator } from 'react-navigation';
 
 const isAndroid = Platform.OS === 'android'
 
-export default class WebViewTalkJs extends Component {
+class HomeScreen extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: {
-        id: "myapp_id",
-        name: "Alexandra McManahmanah",
-        email: "alexandra@example.com",
-        photoUrl: "https://talkjs.com/docs/img/george.jpg",
-        welcomeMessage: "Hi there!"
-      } 
-    };
-    this._onPressButton = this._onPressButton.bind(this);
-  }
-
-  _onPressButton() {
-    let user = this.state.user;
-    var msg = JSON.stringify(user);
-    this.refs.myWebView.postMessage(msg);
-  }
+   constructor(props) {
+     super(props);
+     this.state = {
+       user: {
+         id: "some_id_123",
+         name: "Alex",
+         email: "alex@example.com",
+         welcomeMessage: "Hello"
+       }
+     };
+   }
 
   render() {
-    const injectedScript = function () {
-      document.addEventListener('message', function (e) {
-        user = JSON.parse(e.data)
-        Talk.ready.then(function () {
-          // The core TalkJS lib has loaded, so let's identify the current user to TalkJS.
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Id: {this.state.user.id} </Text>
+        <Text>Name: {this.state.user.name}</Text>
+        <Text>Email: {this.state.user.email}</Text>
+        <Text>Welcome message: {this.state.user.welcomeMessage}</Text>
+        <Button
+          title= {"Talk with " + this.state.user.name}
+          onPress={() => {
+        this.props.navigation.navigate('Chatbox', {
+          userToChat: this.state.user
+        });
+      }}
+      />
+    </View>
+    );
+  }
+}
 
-          // TODO: replace the fields below with actual user data.
-          var me = new Talk.User({
-            // must be any value that uniquely identifies this user
+class ChatScreen extends React.Component {
+
+    static navigationOptions = ({ navigation, navigationOptions }) => {
+    const { params } = navigation.state;
+
+    return {
+      title: params.userToChat.name
+    };
+  };
+
+  javascriptToInject = user => {
+        return `
+        Talk.ready.then(function() {
+            
+        var me = new Talk.User({
             id: "123456",
             name: "George Looney",
             email: "george@looney.net",
             photoUrl: "https://talkjs.com/docs/img/george.jpg"
           });
-          // TODO: add a "configuration" field to the user object so your
-          // user can get email notifications.
-          // See https://talkjs.com/docs/Emails_and_Configurations.html for more 
-          // info.
-          // TODO: replace the appId below with the appId provided in the Dashboard
           window.talkSession = new Talk.Session({
             appId: "tHax9rb0",
             me: me
           });
-          // Let's show the chatbox.
-          // First, we need to define who we want to talk to.
-          var user_to_talk = new Talk.User({
-            // just hardcode any user id, as long as your real users don't have this id
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            photoUrl: user.photoUrl,
-            welcomeMessage: user.welcomeMessage
+          var other = new Talk.User({
+            id: "${user.id}",
+            name: "${user.name}",
+            email: "${user.email}",
+            welcomeMessage: "${user.welcomeMessage}"
           });
 
 
-          var conversationId = Talk.oneOnOneId(me, user_to_talk);
+          var conversationId = Talk.oneOnOneId(me, other);
 
           var conversation = window.talkSession.getOrCreateConversation(conversationId);
           conversation.setParticipant(me);
-          conversation.setParticipant(user_to_talk);
+          conversation.setParticipant(other);
           var chatbox = window.talkSession.createChatbox(conversation);
           chatbox.mount(document.getElementById("talkjs-container"));
         });
-      });
-
+      `
     }
 
-    return (
-      <View style={styles.container}>
-        <TouchableHighlight onPress={this._onPressButton}>
-          <Text>Press me to talk with {this.state.user.name}</Text>
-        </TouchableHighlight>
+  render() {
+    const { navigation } = this.props;
+    const userToChat = navigation.getParam('userToChat');
 
+    return (
         <WebView
           source={{ uri: isAndroid ? 'file:///android_asset/widget/index.html' : './widget/index.html' }}
-          injectedJavaScript={'(' + String(injectedScript) + ')()'}
-          ref="myWebView"
+          injectedJavaScript={this.javascriptToInject(userToChat)}
         />
-
-      </View>
     );
   }
 }
 
-let styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff'
+const RootStack = createStackNavigator(
+  {
+    Home: HomeScreen,
+    Chatbox: ChatScreen,
   },
-  webView: {
-    backgroundColor: '#fff',
-    height: 50,
+  {
+    initialRouteName: 'Home',
   }
-});
+);
+
+export default class App extends React.Component {
+  render() {
+    return <RootStack />;
+  }
+}
