@@ -3,13 +3,13 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableHighlight,
+  ScrollView,
   WebView,
   Platform,
   Button
 } from 'react-native';
-
 import { createStackNavigator } from 'react-navigation';
+import { List, ListItem } from 'react-native-elements';
 
 const isAndroid = Platform.OS === 'android'
 
@@ -18,31 +18,44 @@ class HomeScreen extends React.Component {
    constructor(props) {
      super(props);
      this.state = {
-       user: {
-         id: "some_id_123",
+       users: [
+       {
+         id: "1",
          name: "Alex",
          email: "alex@example.com",
          welcomeMessage: "Hello"
+       },
+       {
+         id: "2",
+         name: "Nidecker",
+         email: "alex@example.com",
+         welcomeMessage: "Hello"
        }
+       ]
      };
    }
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Id: {this.state.user.id} </Text>
-        <Text>Name: {this.state.user.name}</Text>
-        <Text>Email: {this.state.user.email}</Text>
-        <Text>Welcome message: {this.state.user.welcomeMessage}</Text>
-        <Button
-          title= {"Talk with " + this.state.user.name}
-          onPress={() => {
-        this.props.navigation.navigate('Chatbox', {
-          userToChat: this.state.user
-        });
-      }}
-      />
-    </View>
+      <ScrollView>
+        <List>
+          {this.state.users.map((user) => (
+            <ListItem
+              key={user.id}
+              roundAvatar
+              avatar={{ uri: user.photoUrl }}
+              title={`${user.name.toUpperCase()}`}
+              subtitle={user.email}
+              onPress={() => {
+                this.props.navigation.navigate('Chatbox', {
+                  userToChat: user
+                });
+              }}
+            />
+          ))}
+        </List>
+      </ScrollView>
+
     );
   }
 }
