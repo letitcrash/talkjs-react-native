@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import { List, ListItem } from 'react-native-elements';
+import { createBottomTabNavigator } from 'react-navigation';
 
 const isAndroid = Platform.OS === 'android'
 
@@ -21,7 +22,7 @@ class HomeScreen extends React.Component {
        users: [
        {
          id: "1",
-         name: "Liuka",
+         name: "Liuka LOLOLO",
          email: "liuka@example.com",
          photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/screens-example/assets/user1.jpg",
          welcomeMessage: "Bonjour"
@@ -74,9 +75,6 @@ class ChatScreen extends React.Component {
     static navigationOptions = ({ navigation, navigationOptions }) => {
     const { params } = navigation.state;
 
-    return {
-      title: params.userToChat.name
-    };
   };
 
   javascriptToInject = user => {
@@ -118,26 +116,38 @@ class ChatScreen extends React.Component {
     const userToChat = navigation.getParam('userToChat');
 
     return (
+      <View style={styles.container}>
         <WebView
           source={{ uri: isAndroid ? 'file:///android_asset/widget/index.html' : './widget/index.html' }}
           injectedJavaScript={this.javascriptToInject(userToChat)}
+          renderLoading={()=>{
+            return <Loading />
+          }}
         />
+      </View>
     );
   }
 }
 
-const RootStack = createStackNavigator(
-  {
-    Home: HomeScreen,
-    Chatbox: ChatScreen,
-  },
-  {
-    initialRouteName: 'Home',
+var styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor:'#fff'
   }
-);
+})
 
-export default class App extends React.Component {
+class Loading extends Component {
   render() {
-    return <RootStack />;
-  }
+    return (
+        <View style={styles.container}>
+          <Text> Loading... </Text>
+        </View>
+    )}
 }
+
+
+export default createBottomTabNavigator({
+  Home: HomeScreen,
+  Chatbox: ChatScreen,
+});
+
