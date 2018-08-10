@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
+  Linking,
   Text,
   ScrollView,
   WebView,
@@ -34,10 +35,11 @@ class HomeScreen extends React.Component {
          welcomeMessage: "Hej"
        },
        {
-         id: "3",
-         name: "Alexandra",
-         email: "alex@example.com",
+         id: "_9",
+         name: "Karem",
+         email: "dev@talkjs.com",
          photoUrl: "https://raw.githubusercontent.com/paulsmal/talkjs-react-native/screens-example/assets/user3.jpg",
+         configuration: "booker", 
          welcomeMessage: "Hello"
        }
        ]
@@ -71,7 +73,7 @@ class HomeScreen extends React.Component {
 
 class ChatScreen extends React.Component {
 
-    static navigationOptions = ({ navigation, navigationOptions }) => {
+  static navigationOptions = ({ navigation, navigationOptions }) => {
     const { params } = navigation.state;
 
     return {
@@ -84,13 +86,14 @@ class ChatScreen extends React.Component {
         Talk.ready.then(function() {
             
         var me = new Talk.User({
-            id: "123456",
-            name: "George Looney",
+            id: "_10",
+            name: "Alice",
             email: "george@looney.net",
+            configuration: "booker",
             photoUrl: "https://talkjs.com/docs/img/george.jpg"
           });
           window.talkSession = new Talk.Session({
-            appId: "tHax9rb0",
+            appId: "Hku1c4Pt",
             me: me
           });
           var other = new Talk.User({
@@ -116,11 +119,18 @@ class ChatScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     const userToChat = navigation.getParam('userToChat');
-
+    const uri = "file:///android_asset/widget/index.html";
     return (
         <WebView
-          source={{ uri: isAndroid ? 'file:///android_asset/widget/index.html' : './widget/index.html' }}
+          ref={(ref) => { this.webview = ref; }}
+          source={{ uri }}
           injectedJavaScript={this.javascriptToInject(userToChat)}
+          onNavigationStateChange={(event) => {
+          if (event.url !== uri) {
+            this.webview.stopLoading();
+            Linking.openURL(event.url);
+          }
+        }}
         />
     );
   }
